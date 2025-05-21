@@ -37,7 +37,7 @@ function ListComponent(props) {
           </thead>
           <tbody>
             <tr>
-              <td>1</td>
+              <td className="cen">1</td>
               <td>
                 {/* 부모에서 전달된 props를 아래와 같이 호출해서 mode를
                   view로 변경한다. */}
@@ -46,8 +46,8 @@ function ListComponent(props) {
                   props.changeMode('view');
                 }}>오늘은 React공부하는날</a>
               </td>
-              <td>홍길동</td>
-              <td>2025-05-20</td>
+              <td className="cen">홍길동</td>
+              <td className="cen">2025-05-20</td>
             </tr>
           </tbody>
         </table>

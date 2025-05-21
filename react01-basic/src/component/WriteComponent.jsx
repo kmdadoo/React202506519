@@ -18,15 +18,15 @@ function WriteComponent(props) {
           <table id="boardTable">
             <tbody>
               <tr>
-                <td>작성자</td>
+                <td className="cen">작성자</td>
                 <td><input type="text" name="writer" /></td>
               </tr>
               <tr>
-                <td>제목</td>
+                <td className="cen">제목</td>
                 <td><input type="text" name="title" /></td>
               </tr>
               <tr>
-                <td>내용</td>
+                <td className="cen">내용</td>
                 <td><textarea name="contents" cols="22" rows="3"></textarea></td>
               </tr>
             </tbody>

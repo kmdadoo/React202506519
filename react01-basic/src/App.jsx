@@ -1,48 +1,48 @@
-//App 컴포넌트에서 사용하는 스타일시트 
 import './App.css'
-//State를 관리하기 위한 훅 
-import { useState } from 'react';
 
-/** 
-component 폴더 안에 파일을 만들고 각각의 컴포넌트를 js 혹은 jsx 파일로 생성한 후 모듈화한다. 
-import시 저장된 경로와 컴포넌트명까지만 기술하고 확장자는 생략한다. 
-*/
-import ViewComponent from './component/ViewComponent';
-import WriteComponent from './component/WriteComponent';
-import ListComponent from './component/ListComponent';
-
+/**
+JSX 에서 스타일을 적용하는 방법
+-class 속성은 className으로 변경한다. JS에서 이미 예약어로 사용되고 있기 때문.
+-id속성은 그대로 사용할 수 있다. 
+-style속성을 통해 부여할때는 컬리브레이스(콧수염괄호)를 사용하여 JSON객체 형태로
+기술한다. 
+-외부 css파일에 스타일시트를 정의한 후 적용할 수 있다. 
+-index.html / index.css / App.css 파일을 사용할 수 있다. 
+ */ 
 function App() {
-  /** State를 정의한 후 초기값은 list로 설정. 변경할 함수명은 setMode로 정의. */
-  const [mode, setMode] = useState('list');
-  let contents = '';
+  //JSON 객체로 스타일을 정의 
+  const mystyle ={
+    color: "white",
+    backgroundColor: "DodgerBlue",  // 다저스 파랑색
+    padding: "10px",
+    fontFamily: "Verdana"
+  };
 
-  /** mode의 변화에 따라 다른 컴포넌트를 할당할 수 있도록 if문으로 분기. 
-  공통적으로 mode를 파라미터로 받은 후 State를 변경하는 함수가 props를 통해
-  자식 컴포넌트로 전달됨.  
-  
-  pmode 자식 컴포넌트에서 특정 이벤트(예: 버튼 클릭)가 발생했을 때, pmode 
-  값을 changeMode 함수에 전달하여 부모 컴포넌트의 mode 상태를 변경합니다.
-  즉, pmode는 자식 컴포넌트가 부모 컴포넌트에게 "어떤 모드로 변경해야 
-  하는지"를 알려주는 역할을 합니다.
-  모드 값 전달:
-  pmode는 문자열 형태의 모드 값을 가지며, 예를 들어 "list", "view", 
-  "write" 등이 될 수 있습니다.
-  이 값은 부모 컴포넌트의 setMode 함수에 전달되어 mode 상태를 업데이트하는 
-  데 사용됩니다.
-  */  
-  if (mode==="view") {
-    contents = <ViewComponent changeMode={(pmode)=>{setMode(pmode)}}></ViewComponent>
-  }else if (mode==="write") {
-    contents = <WriteComponent changeMode={(pmode)=>{setMode(pmode)}}></WriteComponent>
-  }else {
-    contents = <ListComponent changeMode={(pmode)=>{setMode(pmode)}}></ListComponent>
-  }
-
-  //최종적으로 컴포넌트를 렌더링 
   return (
     <div className='App'>
-      <h1>React- 모듈화</h1>
-      {contents}
+      <h1>React - Style 지정하기</h1>
+      <ol>
+        {/* style속성을 직접 부여할때는 아래와 같이 컬리브레이스를 사용한다. */}
+        <li style={{color : "red"}}>프론트엔드</li>
+        {/* JSON객체로 정의한 속성을 부여한다.  */}
+        <ul style={mystyle}>
+            <li>HTML5</li>
+            <li>CSS3</li>
+            <li>Javascript</li>
+            <li>jQuery</li>
+        </ul>
+        {/* App.css 에 정의한 스타일시트 적용  */}
+        <li className='backEnd'>백엔드</li>
+        <ul>
+          <li id='backEndSub'>Java</li>
+          {/* class속성을 사용하면 에러가 발생하진 않으나 경고가 뜨므로
+            React의 권고사항대로 className을 사용하도록 한다.  */}
+          {/* <li class='warnings'>Oracle</li>  경고남 */}
+          <li className='warnings'>Oracle</li>  
+          <li>JSP</li>
+          <li>Spring Boot</li>
+        </ul>
+      </ol>
     </div>
   )
 }
