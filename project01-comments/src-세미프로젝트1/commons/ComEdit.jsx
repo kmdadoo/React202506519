@@ -2,32 +2,19 @@ import React from "react";
 import {useState} from 'react';
 
 function ComEdit(props){
-  const [writer, setWriter] = useState(props.writer); // 수정
-  const [comment, setComment] = useState(props.comment);
-
+  const [writer, setWriter] = useState(props.selectData.writer);
+  const [comment, setComment] = useState(props.selectData.comment);
   return (<>
     <form onSubmit={(event)=>{
       event.preventDefault();
-      // 폼값 검증
-      if (event.target.writer.value === '') {
-        alert('작성자를 입력하세요.');
-        event.target.writer.focus();
-        return;
-      }
-      if (event.target.comment.value === '') {
-        alert('댓글 내용을 입력하세요.');
-        event.target.comment.focus();
-        return;
-      }
-      // 수정
+      //폼값 가져오기
       let writer = event.target.writer.value;
       let comment = event.target.comment.value;
-      props.onEditComment(props.no, writer, comment);
+      //입력값 지우기
       event.target.writer.value = '';
       event.target.comment.value = '';
-      // 수정 State 수정
-      props.setShowEdit(false);
-      props.setEditNo(null);
+      //수정 처리 하기
+      props.editAction(writer, comment);
     }}>
       <table id="boardTable">
         <tbody>
@@ -36,11 +23,9 @@ function ComEdit(props){
               <input type="text" name="writer" value={writer} onChange={(event)=>{
               setWriter(event.target.value);
               }} />
-              <button onClick={(event)=>{
-                event.preventDefault();
-                props.setShowEdit(false);
-                props.setEditNo(null);
-              }}>수정취소</button>
+              <input type="button" value="수정취소" onClick={()=>{
+                props.changeMode('list', null);
+              }}></input>
             </td>
             <td rowSpan="2"><input type="submit" value="댓글수정" id="btn"/></td>
           </tr>
