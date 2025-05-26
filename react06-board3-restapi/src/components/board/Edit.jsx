@@ -3,13 +3,14 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 function Edit(props) {
+  console.log(props);
   //페이지 이동
   const navigate = useNavigate();
   //파라미터 읽어오기
   let params = useParams();
   console.log("수정idx", params.idx);
 
-  let requestUrl = "http://nakja.co.kr/APIs/php7/boardEditJSON.php"
+  let requestUrl = "http://nakja.co.kr/APIs/php7/boardViewJSON.php"
   let parameter = "apikey=7ff3fbde0a75dbf1bf77796fc652997d&tname=nboard_news&idx="+params.idx;
 
   //수정을 위한 State
@@ -27,23 +28,17 @@ function Edit(props) {
       return result.json();
      })
      .then((json)=>{
-      console.log(json)
-     })
-  })
-
-  console.log("파라미터", params.no);
-  let pno = Number(params.no);
-
-  let vi = boardData.reduce((prev, curr)=>{
-    if(curr.no===pno){
-      prev = curr;
+      console.log(json);
+      // setBoardData(json);
+      //<input>에 설정해야 하는 값의 State변경
+      setWriter(json.name);
+      setTitle(json.subject);
+      setContents(json.content);
+     });
+    return ()=>{
+      console.log('useEffect실행 ==>컴포넌트 언마운트');
     }
-    return prev;
-  }, {})
-
-  const [title, setTitle] = useState(vi.title);
-  const [writer, setWriter] = useState(vi.writer);
-  const [contents, setContents] = useState(vi.contents);
+  }, []);
 
   return(<>
     <header>
@@ -58,35 +53,43 @@ function Edit(props) {
         (event) =>{
           event.preventDefault();
 
-          //Event객체를 통해 입력값을 얻어옴 
+          //폼값정리
+          let i = event.target.idx.value;
           let w = event.target.writer.value;
           let t = event.target.title.value;
           let c = event.target.contents.value;
 
-          //추가할 객체 생성 
-          let editBoardData = {no:pno, writer:w, title:t, contents:c, date:nowDate()};
+          //수정API호출
+          fetch('http://nakja.co.kr/APIs/php7/boardEditJSON.php',{
+            method: 'POST',
+            headers: {
+              'Content-type':'application/x-www-form-urlencoded;charset=UTF-8',
+            },
+            body: new URLSearchParams({
+              apikey: '7ff3fbde0a75dbf1bf77796fc652997d',
+              tname: 'nboard_news',
+              id: 'jsonAPI',
+              name: w,
+              subject: t,
+              content: c,
+              idx: i,
+            }),
+          })
+          .then((response) => response.json())
+          .then((json) => console.log(json));
 
-          //복사본을 생성한 후 데이터를 추가한다. 
-          let copyBoardData = [...boardData];
-          for (let i = 0; i < copyBoardData.length; i++) {
-            //수정할 객체를 찾아서..
-            if (copyBoardData[i].no===pno) {
-              //변경한다. 
-              copyBoardData[i] = editBoardData;
-              break;
-            }
-          }
-
-          //State를 변경한다. 
-          setBoardData(copyBoardData);
-          //완료되면 목록으로 이동한다. 
-          navigate("/list");
+          //수정 완료후 목록으로 이동 
+          navigate("/view/"+params.idx);
         }
       }>
+        {/* 수정할 게시물의 일련번호는 고정된 값이어도 상관없으므로 State를
+        사용하지 않는다. */}
+        <input type="hidden" name="idx" value={params.idx} />
         <table id="boardTable">
           <tbody>
             <tr>
               <td>작성자</td>
+              {/* 입력값에 대한 변경은 State와 onChange리스너를 통해 처리한다.*/}
               <td><input type="text" name="writer" value={writer} onChange={(event)=>{
                 setWriter(event.target.value);
               }}/></td>
